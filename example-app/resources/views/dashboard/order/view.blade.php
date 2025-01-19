@@ -7,7 +7,7 @@
     <thead>
       <tr>
         <th scope="col">ID</th>
-        <th scope="col">User Email</th>
+        <th scope="col">User ID</th>
         <th scope="col">Products</th>
         <th scope="col" colspan="2">Delete</th>
       </tr>
@@ -15,27 +15,27 @@
     <tbody>
 
 
-        @if (isset($arr_all))
+        @if (isset($orders))
 
 
 
-        @foreach($arr_all as $key => $arr_all)
+        @foreach($orders as $key => $orders)
 
 
 
         <tr>
             <th scope="row">{{++$key}}</th>
-            <td>{{$user_email[0][0]->email}}</td>
+            <td>{{$orders->user_id}}</td>
             <td>
-                @foreach ($arr as $k=>$arr)
-                {{$arr[0]->name}},
-                @endforeach
+                {{$orders->products_id}}
             </td>
+
             <td class="d-flex">
 
-                <form action="{{route("order.destroy",$user_id[0])}}" method="POST" >
+                <form action="{{route("order.destroy",$orders->user_id)}}" method="POST" >
                     @csrf
                     @method("DELETE")
+                    <input type="hidden" name="products_id" value="{{$orders->products_id}}">
                     <button type="submit" class="btn btn-danger ml-2">Delete</button>
                 </form>
             </td>

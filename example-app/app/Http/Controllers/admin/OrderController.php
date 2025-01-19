@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
@@ -17,26 +18,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = Order::all();
-        $arr_all = [];
-        $arr = [];
-        $user_email = [];
-        $user_id = [];
-        foreach($order as $order){
 
-            $val = explode("+",$order->products_id);
-            foreach($val as $val){
-                $name = Product::where("id",$val)->get("name");
-                array_push($arr,$name);
-            }
-            $email = User::where("id",$order->user_id)->get("email");
-            $id = $order->user_id;
-            // return $arr;
-            array_push($arr_all,$arr);
-            array_push($user_email,$email);
-            array_push($user_id,$id);
-        }
-        return view("dashboard.order.view",compact("arr","arr_all","user_email","user_id"));
+        $orders = Order::get();
+        return view("dashboard.order.view",compact("orders"));
     }
 
     /**
@@ -52,7 +36,13 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user_id = Session::get("id");
+        $cart = Cart::where("user_id",$user_id)->get("products_id");
+        foreach ($cart as $cart) {
+            Order::create(["user_id"=>$user_id,"products_id"=>$cart->products_id]);
+        }
+        Cart::where("user_id",$user_id)->delete();
+        return to_route("index");
     }
 
     /**
@@ -76,21 +66,15 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $cart = Cart::where("user_id",$id)->get("products_id");
-        $cart = $cart[0]->products_id;
-        Order::where("user_id",$id)->update(["products_id"=>$cart]);
-        Cart::where("user_id",$id)->update(["products_id"=>""]);
-        $product = Product::limit(8)->get();
-        $image = Image::all();
-        return view("web.ecomm.index",compact("product","image"));
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        Order::where("user_id",$id)->update(["products_id"=>""]);
-        return to_route("cart.index");
+        Order::where("user_id",$id)->where("products_id",$request->products_id)->delete();
+        return to_route("order.index");
     }
 }

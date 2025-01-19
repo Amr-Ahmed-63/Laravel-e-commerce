@@ -147,6 +147,7 @@ nav
 <span>(+100) 123 456 7890</span>
 </h3>
 </div>
+<a href="logout" class="btn btn-danger">Logout</a>
 <div class="navbar-cart">
 <div class="wishlist">
 <a href="javascript:void(0)">

@@ -17,13 +17,5 @@ class Image extends Model
         return $this->belongsTo(Product::class);
     }
 
-    // public static function saveImg( $product_id , $image )
-    // {
-
-    //         // Image::create([
-    //         //     "product_id"=>$product_id,
-    //         //     "image"=>$image,
-    //         // ]);
-    //     }
     }
 

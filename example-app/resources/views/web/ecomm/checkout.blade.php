@@ -98,22 +98,16 @@
     </div>
     </div>
 
-<?php
-$i = 0 ;
-?>
-@if($cart_arr[0] != "")
+@if([] != $pro)
 
-
-
-
-@foreach ($cart_arr as $crt)
+@foreach ($pro as $key=>$pro)
 <div class="cart-single-list">
     <div class="row align-items-center">
         <div class="col-lg-1 col-md-1 col-12">
-            <img src="{{asset("storage/images/".$img_image[$i][0]->image)}}" alt="#">
+            <img src="{{asset("storage/images/".$img[$key][0]->image)}}" alt="#">
         </div>
         <div class="col-lg-4 col-md-3 col-12">
-            <h5 class="product-name"> {{$product_name[$i][0]->name}} </h5>
+            <h5 class="product-name"> {{$pro[0]->name}} </h5>
             <p class="product-des">
                 <span><em>Type:</em> Mirrorless</span>
                 <span><em>Color:</em> Black</span>
@@ -131,22 +125,19 @@ $i = 0 ;
             </div>
         </div>
         <div class="col-lg-2 col-md-2 col-12">
-            <p>${{$product_price[$i][0]->price}}</p>
+            <p>${{$pro[0]->price}}</p>
         </div>
         <div class="col-lg-2 col-md-2 col-12">
-            <p>${{$product_sale[$i][0]->sale}}</p>
+            <p>${{$pro[0]->sale}}</p>
         </div>
         <div class="col-lg-1 col-md-2 col-12">
             <a class="remove-item" href="javascript:void(0)"><i class="lni lni-close"></i></a>
         </div>
     </div>
 </div>
-<?php
-$i ++
-?>
+
 @endforeach
 @endif
-
     <!-- <div class="cart-single-list">
     <div class="row align-items-center">
     <div class="col-lg-1 col-md-1 col-12">
@@ -246,9 +237,8 @@ $i ++
     <li class="last">You Pay<span>$2531.00</span></li>
     </ul>
     <div class="button">
-        <form action="order/{{$user_id}}" method="POST">
+        <form action="order" method="POST">
             @csrf
-            @method("PUT")
             <button type="submit" href="order" class="btn">Checkout</button>
         </form>
     <a href="product-grids.html" class="btn btn-alt">Continue shopping</a>

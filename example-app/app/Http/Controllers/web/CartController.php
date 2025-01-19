@@ -17,28 +17,17 @@ class CartController extends Controller
     public function index()
     {
         $user_id = Session::get("id");
+        $cart = Cart::where("user_id",$user_id)->get("products_id");
+        $pro = [];
+        $img = [];
 
-        $cart = Cart::all()->where("user_id",$user_id);
-        $cart_str = $cart[1]->products_id;
-        $cart_arr = explode("+",$cart_str);
-        $product_name = [];
-        $product_price = [];
-        $product_sale = [];
-        $img_image = [];
-        foreach($cart_arr as $crt){
-            $name = Product::where("id",$crt)->get("name");
-            $price = Product::where("id",$crt)->get("price");
-            $sale = Product::where("id",$crt)->get("sale");
-            $img = Image::where("product_id",$crt)->get("image");
-            array_push($product_name,$name);
-            array_push($product_price,$price);
-            array_push($product_sale,$sale);
-            array_push($img_image,$img);
+        foreach($cart as $cart){
+            $product = Product::where("id",$cart->products_id)->get();
+            $image = Image::where("product_id",$cart->products_id)->get();
+            array_push($pro,$product);
+            array_push($img,$image);
         }
-        // return $product_name;
-        // return count($cart_arr);
-        return view("web.ecomm.checkout",compact("user_id","product_name","product_price","product_sale","img_image","cart_arr"));
-        // return view("web.ecomm.checkout",compact("cart"));
+        return view("web.ecomm.checkout",compact("pro","img"));
     }
 
     /**
@@ -54,7 +43,9 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user_id = Session::get("id");
+        Cart::create(["user_id"=>$user_id,"products_id"=>$request->products_id]);
+        return to_route("index");
     }
 
     /**
@@ -74,9 +65,7 @@ class CartController extends Controller
      */
     public function edit(string $id)
     {
-        // $product = Product::all()->where("id",$id);
-        // $img = Image::all()->where("product_id",$id);
-        // return view("web.ecomm.addToCart",compact("id","product","img"));
+
     }
 
     /**
@@ -84,24 +73,7 @@ class CartController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user_id = Session::get("id");
-        $cart = Cart::where("user_id",$user_id)->get("products_id");
 
-        if( null == $cart[0]->products_id){
-            Cart::where("user_id",$user_id)->update(["products_id"=>$request->products_id]);
-            $product = Product::all();
-            $image = Image::all();
-            return view("web.ecomm.index",compact("product","image"));
-
-        }else{
-            $cart_arr = explode("+",$cart[0]->products_id);
-            array_push($cart_arr,$request->products_id);
-            $cart_str = implode("+",$cart_arr);
-            Cart::where("user_id",$user_id)->update(["products_id"=>$cart_str]);
-            $product = Product::all();
-            $image = Image::all();
-            return view("web.ecomm.index",compact("product","image"));
-        }
     }
 
     /**

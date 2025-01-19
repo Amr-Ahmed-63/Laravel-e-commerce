@@ -38,19 +38,11 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $user = $request->except("_token","password_confirmation");
-        // return $user;
         User::create($user);
         $user_ID = User::where("email",$request->email)->get("id");
         $user_id = $user_ID[0]->id;
-        Cart::create(["user_id"=>$user_id]);
-        Order::create(["user_id"=>$user_id]);
-        $product = Product::all();
-        $image = Image::all();
-        // $user_info = User::where("email",$user->email)->findOrFail();
-        // $token = $user_info->createToken("auth_token")->plainTextToken;
-
         Session::put("id" , $user_id);
-        return view("web.ecomm.index",compact("image","product"));
+        return to_route("index");
 
     }
     public function login(Request $request){
@@ -58,19 +50,26 @@ class UserController extends Controller
             "email"=>"required|string|email",
             "password"=>"required|string|min:6",
         ]);
-        // $pass_hash = Hash::make($request->password);
         if(Auth::attempt($request->only("email","password"))){
             $user = $request->email;
-            $product = Product::all();
-            $image = Image::all();
-            $user_id = User::where("email",$request->email)->get("id");
+            $user_ID = User::where("email",$request->email)->get("id");
+            $user_id = $user_ID[0]->id;
             Session::put("id" , $user_id);
-            return view("web.ecomm.index",compact("user","image","product"));
+            return to_route("index");
         }else{
             $error = "email or password is incorrect";
             return view("web.users.login",compact("error"));
         }
     }
+
+        /**
+     * Logout.
+     */
+    public function logout(){
+        Session::flush();
+        return to_route("index");
+    }
+
     /**
      * Display the specified resource.
      */

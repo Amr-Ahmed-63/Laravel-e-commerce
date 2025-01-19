@@ -16,7 +16,7 @@ class AdminController extends Controller
     {
         $admin = Admin::get();
         return view("dashboard.admin.view",compact("admin"));
-        // return "yes";
+
     }
 
 

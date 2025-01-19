@@ -10,12 +10,6 @@ use App\Http\Controllers\admin\UsersController;
 use App\Http\Controllers\admin\ProductController;
 
 
-
-// Route::prefix("web")->group(function(){
-//     Route::get("/",[WebController::class,"index"]);
-// });
-
-
 Route::resource("admin",AdminController::class);
 Route::resource("product",ProductController::class);
 Route::resource("/",WebController::class);
@@ -23,6 +17,7 @@ Route::resource("user",UserController::class);
 Route::resource("cart",CartController::class);
 Route::resource("order",OrderController::class);
 Route::post("login",[UserController::class,"login"]);
-// Route::get("user/login",[UserController::class,"login"]);
+Route::get("logout",[UserController::class,"logout"]);
+
 
 

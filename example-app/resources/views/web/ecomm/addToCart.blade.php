@@ -235,10 +235,9 @@
     <li class="last">You Pay<span>$2531.00</span></li>
     </ul>
     <div class="button">
-        <form action="{{route("cart.update",11)}}" method="POST">
+        <form action="{{route("cart.store")}}" method="POST">
 
             @csrf
-            @method("PUT")
             <input type="hidden" name="products_id" value="{{$id}}">
             <button type="submit" href="" class="btn">Add To Cart</button>
         </form>
